@@ -1,0 +1,28 @@
+{
+	"FileVersion": 3,
+	"Version": 2,
+	"VersionName": "1.2.2",
+	"FriendlyName": "STOMP Over WebSockets BP",
+	"Description": "Exposes Unreal's stomp/ws communication to blueprinting",
+	"Category": "Networking",
+	"CreatedBy": "Ruzihm",
+	"CreatedByURL": "",
+	"DocsURL": "https://docs.google.com/document/d/1yUTG7LotGFGdsSmUyEjwji1zndxtTFRCZWhN3zT4z5g/edit",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/19e5b70357a44b9ebfa656c02dfee6cc",
+	"SupportURL": "",
+	"EngineVersion": "5.3.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "STOMPWebSockets",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"Linux"
+			]
+		}
+	]
+}
