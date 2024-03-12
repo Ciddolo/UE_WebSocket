@@ -19,11 +19,6 @@
 			]
 		},
 		{
-			"Name": "STOMPWebSockets",
-			"Enabled": false,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/19e5b70357a44b9ebfa656c02dfee6cc"
-		},
-		{
 			"Name": "WebSocketServer",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/0c02d8c1c8d74fd4aff3cfcb0a3c40e1"
