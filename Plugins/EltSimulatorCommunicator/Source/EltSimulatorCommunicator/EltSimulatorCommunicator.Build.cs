@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class WebSocketReceiver : ModuleRules
+public class EltSimulatorCommunicator : ModuleRules
 {
-	public WebSocketReceiver(ReadOnlyTargetRules Target) : base(Target)
+	public EltSimulatorCommunicator(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		

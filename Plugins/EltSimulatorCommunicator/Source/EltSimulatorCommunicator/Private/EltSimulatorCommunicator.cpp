@@ -1,15 +1,15 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "WebSocketReceiver.h"
+#include "EltSimulatorCommunicator.h"
 
-#define LOCTEXT_NAMESPACE "FWebSocketReceiverModule"
+#define LOCTEXT_NAMESPACE "FEltSimulatorCommunicatorModule"
 
-void FWebSocketReceiverModule::StartupModule()
+void FEltSimulatorCommunicatorModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 }
 
-void FWebSocketReceiverModule::ShutdownModule()
+void FEltSimulatorCommunicatorModule::ShutdownModule()
 {
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
@@ -17,4 +17,4 @@ void FWebSocketReceiverModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FWebSocketReceiverModule, WebSocketReceiver)
+IMPLEMENT_MODULE(FEltSimulatorCommunicatorModule, EltSimulatorCommunicator)
