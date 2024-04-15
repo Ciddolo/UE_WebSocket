@@ -55,8 +55,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ESC")
 	void ServerOnNewClient(UWebSocket* NewClient);
 
-	UFUNCTION(BlueprintCallable, Category = "ESC")
-	void ServerOnMessage(FString NewCommand, UWebSocket* NewClient);
+	UFUNCTION(BlueprintCallable, Category = "ESC", Meta = (ExpandEnumAsExecs = "OutputPins"))
+	void ServerOnMessage(FString NewCommand, UWebSocket* NewClient, EEltSimulatorCommands& OutputPins);
 
 	UFUNCTION(BlueprintCallable, Category = "ESC")
 	void ServerOnClientLeft(UWebSocket* NewClient);

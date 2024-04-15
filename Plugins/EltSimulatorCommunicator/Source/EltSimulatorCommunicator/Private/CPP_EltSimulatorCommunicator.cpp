@@ -140,11 +140,13 @@ void ACPP_EltSimulatorCommunicator::ServerOnNewClient(UWebSocket* NewClient)
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
 }
 
-void ACPP_EltSimulatorCommunicator::ServerOnMessage(FString NewCommand, UWebSocket* NewClient)
+void ACPP_EltSimulatorCommunicator::ServerOnMessage(FString NewCommand, UWebSocket* NewClient, EEltSimulatorCommands& OutputPins)
 {
 	if (NewClient == nullptr) return;
 
 	ParseCommand(NewCommand);
+
+	OutputPins = EltSimulatorCommand;
 
 	FString Output = "[" + NewClient->GetFName().ToString() + "] " + EnumToDisplayNameString(EltSimulatorCommand);
 
