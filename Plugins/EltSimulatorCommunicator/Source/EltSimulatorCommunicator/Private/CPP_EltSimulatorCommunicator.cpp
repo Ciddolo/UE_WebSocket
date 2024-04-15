@@ -124,6 +124,8 @@ void ACPP_EltSimulatorCommunicator::ServerOnListening(UWebSocketServer* NewSocke
 
 	if (WebSocketServer == nullptr) return;
 
+	WebSocketServer->Rename(TEXT("[Unreal Engine 5] Server"));
+
 	FString Output = WebSocketServer->GetFName().ToString() + " is listening!";
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
@@ -133,11 +135,13 @@ void ACPP_EltSimulatorCommunicator::ServerOnNewClient(UWebSocket* NewClient)
 {
 	if (NewClient == nullptr) return;
 
-	FString Output = "New Client: " + NewClient->GetFName().ToString() + " !";
+	ClientsCount++;
+	
+	NewClient->Rename(TEXT("Client"));
+
+	FString Output = "[" + NewClient->GetFName().ToString() + "] joined!";
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
-
-	ClientsCount++;
 }
 
 void ACPP_EltSimulatorCommunicator::ServerOnMessage(FString NewCommand, UWebSocket* NewClient)
@@ -146,7 +150,7 @@ void ACPP_EltSimulatorCommunicator::ServerOnMessage(FString NewCommand, UWebSock
 
 	ParseCommand(NewCommand);
 
-	FString Output = "Client: " + NewClient->GetFName().ToString() + "\nString: " + NewCommand + "\nCommand: " + EnumToDisplayNameString(EltSimulatorCommand);
+	FString Output = "[" + NewClient->GetFName().ToString() + "] " + EnumToDisplayNameString(EltSimulatorCommand);
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
 }
@@ -155,7 +159,7 @@ void ACPP_EltSimulatorCommunicator::ServerOnClientLeft(UWebSocket* NewClient)
 {
 	if (NewClient == nullptr) return;
 
-	FString Output = NewClient->GetFName().ToString() + " left!";
+	FString Output = "[" + NewClient->GetFName().ToString() + "] left!";
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
 
@@ -164,7 +168,7 @@ void ACPP_EltSimulatorCommunicator::ServerOnClientLeft(UWebSocket* NewClient)
 
 void ACPP_EltSimulatorCommunicator::PrintLocalIP(float Duration)
 {
-	FString Output = "Local IP: [" + LocalIP + ":" + FString::FromInt(Port) + "]";
+	FString Output = "[Local IP] " + LocalIP + ":" + FString::FromInt(Port);
 
 	GEngine->AddOnScreenDebugMessage(-1, Duration, FColor::Yellow, Output);
 }
