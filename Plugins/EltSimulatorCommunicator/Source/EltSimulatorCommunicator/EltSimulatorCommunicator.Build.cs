@@ -26,6 +26,7 @@ public class EltSimulatorCommunicator : ModuleRules
 			new string[]
 			{
 				"Core",
+				"WebSocketServer",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
