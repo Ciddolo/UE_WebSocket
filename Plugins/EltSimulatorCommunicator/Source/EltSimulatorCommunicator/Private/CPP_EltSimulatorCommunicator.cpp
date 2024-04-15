@@ -124,8 +124,6 @@ void ACPP_EltSimulatorCommunicator::ServerOnListening(UWebSocketServer* NewSocke
 
 	if (WebSocketServer == nullptr) return;
 
-	WebSocketServer->Rename(TEXT("[Unreal Engine 5] Server"));
-
 	FString Output = WebSocketServer->GetFName().ToString() + " is listening!";
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
@@ -136,8 +134,6 @@ void ACPP_EltSimulatorCommunicator::ServerOnNewClient(UWebSocket* NewClient)
 	if (NewClient == nullptr) return;
 
 	ClientsCount++;
-	
-	NewClient->Rename(TEXT("Client"));
 
 	FString Output = "[" + NewClient->GetFName().ToString() + "] joined!";
 
