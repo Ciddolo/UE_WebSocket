@@ -22,7 +22,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "ESC")
 	UWebSocketServer* WebSocketServer;
 
-	UPROPERTY(BlueprintReadOnly, Category="ESC")
+	UPROPERTY(BlueprintReadOnly, Category = "ESC")
 	FString LocalIP;
 
 	UPROPERTY(BlueprintReadOnly, Category = "ESC")
@@ -34,7 +34,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "ESC")
 	int ClientsCount;
 
-	UFUNCTION(BlueprintCallable, Category="ESC")
+	UFUNCTION(BlueprintCallable, Category = "ESC")
 	void UpdateLocalIP();
 
 	UFUNCTION(BlueprintCallable, Category = "ESC")
@@ -55,8 +55,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ESC")
 	void ServerOnNewClient(UWebSocket* NewClient);
 
-	UFUNCTION(BlueprintCallable, Category = "ESC", Meta = (ExpandEnumAsExecs = "OutputPins"))
-	void ServerOnMessage(FString NewCommand, UWebSocket* NewClient, EEltSimulatorCommands& OutputPins);
+	UFUNCTION(BlueprintCallable, Category = "ESC")
+	void ServerOnMessage(FString NewCommand, UWebSocket* NewClient, UPARAM(DisplayName = "Sequence index") int& SequenceIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "ESC")
 	void ServerOnClientLeft(UWebSocket* NewClient);

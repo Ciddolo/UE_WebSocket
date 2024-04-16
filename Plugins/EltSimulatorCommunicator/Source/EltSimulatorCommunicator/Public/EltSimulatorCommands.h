@@ -5,10 +5,10 @@
 UENUM(BlueprintType, Category = "ESC")
 enum class EEltSimulatorCommands : uint8
 {
-	NONE UMETA(DisplayName = "None"),
-	START_SIMULATION UMETA(DisplayName = "Start simulation"),
-	DRONE_ACTIVATE UMETA(DisplayName = "Drone activate"),
-	DRONE_DEACTIVATE UMETA(DisplayName = "Drone deactivate"),
-	SUBMARINE_ACTIVATE UMETA(DisplayName = "Submarine activate"),
-	RADAR_ACTIVATE UMETA(DisplayName = "Radar activate")
+	START_SIMULATION = 0 UMETA(DisplayName = "Start simulation"),
+	DRONE_ACTIVATE = 7 UMETA(DisplayName = "Drone activate"),
+	DRONE_DEACTIVATE = 17 UMETA(DisplayName = "Drone deactivate"),
+	SUBMARINE_ACTIVATE = 20 UMETA(DisplayName = "Submarine activate"),
+	RADAR_ACTIVATE = 27 UMETA(DisplayName = "Radar activate"),
+	INVALID_COMMAND = 255 UMETA(DisplayName = "Invalid command")
 };

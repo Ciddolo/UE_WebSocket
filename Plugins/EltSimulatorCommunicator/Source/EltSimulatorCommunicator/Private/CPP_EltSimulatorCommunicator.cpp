@@ -9,7 +9,7 @@ ACPP_EltSimulatorCommunicator::ACPP_EltSimulatorCommunicator()
 
 	LocalIP = TEXT("Unknown IP");
 
-	EltSimulatorCommand = EEltSimulatorCommands::NONE;
+	EltSimulatorCommand = EEltSimulatorCommands::INVALID_COMMAND;
 
 	Port = 8080;
 
@@ -76,7 +76,7 @@ EEltSimulatorCommands ACPP_EltSimulatorCommunicator::StringToEltSimulatorCommand
 	}
 	else
 	{
-		return EEltSimulatorCommands::NONE;
+		return EEltSimulatorCommands::INVALID_COMMAND;
 	}
 }
 
@@ -105,7 +105,7 @@ EEltSimulatorCommands ACPP_EltSimulatorCommunicator::ParseCommand(FString NewCom
 	}
 	else
 	{
-		EltSimulatorCommand = EEltSimulatorCommands::NONE;
+		EltSimulatorCommand = EEltSimulatorCommands::INVALID_COMMAND;
 	}
 
 	return EltSimulatorCommand;
@@ -140,15 +140,20 @@ void ACPP_EltSimulatorCommunicator::ServerOnNewClient(UWebSocket* NewClient)
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
 }
 
-void ACPP_EltSimulatorCommunicator::ServerOnMessage(FString NewCommand, UWebSocket* NewClient, EEltSimulatorCommands& OutputPins)
+void ACPP_EltSimulatorCommunicator::ServerOnMessage(FString NewCommand, UWebSocket* NewClient, int& SequenceIndex)
 {
-	if (NewClient == nullptr) return;
+	if (NewClient == nullptr)
+	{
+		SequenceIndex = static_cast<int>(EEltSimulatorCommands::INVALID_COMMAND);
+
+		return;
+	}
 
 	ParseCommand(NewCommand);
 
-	OutputPins = EltSimulatorCommand;
+	SequenceIndex = static_cast<int>(EltSimulatorCommand);
 
-	FString Output = "[" + NewClient->GetFName().ToString() + "] " + EnumToDisplayNameString(EltSimulatorCommand);
+	FString Output = "[" + NewClient->GetFName().ToString() + "] " + EnumToDisplayNameString(EltSimulatorCommand) + "\n[Sequence index] " + FString::FromInt(SequenceIndex);
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
 }
