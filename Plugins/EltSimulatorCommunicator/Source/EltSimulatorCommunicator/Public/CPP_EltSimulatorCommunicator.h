@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "EltSimulatorCommands.h"
+#include "EltSimulatorEnums.h"
 #include "WebSocketServer/Public/WebSocketServer.h"
 #include "CPP_EltSimulatorCommunicator.generated.h"
 
@@ -25,8 +25,17 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "ESC")
 	FString LocalIP;
 
+	UPROPERTY(EditAnywhere, Category = "ESC")
+	bool IsDebugMode;
+
+	UPROPERTY(EditAnywhere, Category = "ESC")
+	EEltSimulatorScenarios EltSimulatorScenario;
+
 	UPROPERTY(BlueprintReadOnly, Category = "ESC")
-	EEltSimulatorCommands EltSimulatorCommand;
+	EEltSimulatorCommandsCemaNo EltSimulatorCommandCemaNo;
+
+	UPROPERTY(BlueprintReadOnly, Category = "ESC")
+	EEltSimulatorCommandsCemaYes EltSimulatorCommandCemaYes;
 
 	UPROPERTY(BlueprintReadWrite, Category = "ESC")
 	int Port;
@@ -38,13 +47,17 @@ public:
 	void UpdateLocalIP();
 
 	UFUNCTION(BlueprintCallable, Category = "ESC")
-	EEltSimulatorCommands StringToEltSimulatorCommand(FString NewCommand);
+	EEltSimulatorCommandsCemaNo StringToEltSimulatorCommandCemaNo(FString NewCommand);
 
 	UFUNCTION(BlueprintCallable, Category = "ESC")
-	FString EnumToDisplayNameString(EEltSimulatorCommands EnumValue);
+	EEltSimulatorCommandsCemaYes StringToEltSimulatorCommandCemaYes(FString NewCommand);
+
+	template<typename EnumType>
+	UFUNCTION(BlueprintCallable, Category = "ESC")
+	FString EnumToDisplayNameString(EnumType EnumValue);
 
 	UFUNCTION(BlueprintCallable, Category = "ESC")
-	EEltSimulatorCommands ParseCommand(FString NewCommand);
+	void ParseCommand(FString NewCommand);
 
 	//UFUNCTION(BlueprintCallable, Category = "ESC")
 	//void StartNewServer();

@@ -9,7 +9,10 @@ ACPP_EltSimulatorCommunicator::ACPP_EltSimulatorCommunicator()
 
 	LocalIP = TEXT("Unknown IP");
 
-	EltSimulatorCommand = EEltSimulatorCommands::INVALID_COMMAND;
+	IsDebugMode = false;
+
+	EltSimulatorCommandCemaNo = EEltSimulatorCommandsCemaNo::INVALID_COMMAND;
+	EltSimulatorCommandCemaYes = EEltSimulatorCommandsCemaYes::INVALID_COMMAND;
 
 	Port = 8080;
 
@@ -44,7 +47,6 @@ void ACPP_EltSimulatorCommunicator::UpdateLocalIP()
 	if (LocalInfo.IsValid())
 	{
 		LocalIP = LocalInfo->ToString(false);
-
 	}
 	else
 	{
@@ -52,44 +54,105 @@ void ACPP_EltSimulatorCommunicator::UpdateLocalIP()
 	}
 }
 
-EEltSimulatorCommands ACPP_EltSimulatorCommunicator::StringToEltSimulatorCommand(FString NewCommand)
+EEltSimulatorCommandsCemaNo ACPP_EltSimulatorCommunicator::StringToEltSimulatorCommandCemaNo(FString NewCommand)
 {
-	if (NewCommand == "START_SIMULATION")
+	if (NewCommand == "INITIAL_SEQUENCE")
 	{
-		return EEltSimulatorCommands::START_SIMULATION;
+		return EEltSimulatorCommandsCemaNo::INITIAL_SEQUENCE;
+	}
+	else if (NewCommand == "START_SIMULATION")
+	{
+		return EEltSimulatorCommandsCemaNo::START_SIMULATION;
 	}
 	else if (NewCommand == "DRONE_ACTIVATE")
 	{
-		return EEltSimulatorCommands::DRONE_ACTIVATE;
+		return EEltSimulatorCommandsCemaNo::DRONE_ACTIVATE;
+	}
+	else if (NewCommand == "UNAUTHORIZED_COMMUNICATIONS")
+	{
+		return EEltSimulatorCommandsCemaNo::UNAUTHORIZED_COMMUNICATIONS;
 	}
 	else if (NewCommand == "DRONE_DEACTIVATE")
 	{
-		return EEltSimulatorCommands::DRONE_DEACTIVATE;
+		return EEltSimulatorCommandsCemaNo::DRONE_DEACTIVATE;
+	}
+	else if (NewCommand == "NETWORK_SWITCH")
+	{
+		return EEltSimulatorCommandsCemaNo::NETWORK_SWITCH;
 	}
 	else if (NewCommand == "SUBMARINE_ACTIVATE")
 	{
-		return EEltSimulatorCommands::SUBMARINE_ACTIVATE;
+		return EEltSimulatorCommandsCemaNo::SUBMARINE_ACTIVATE;
+	}
+	else if (NewCommand == "CYBER_SOP")
+	{
+		return EEltSimulatorCommandsCemaNo::CYBER_SOP;
 	}
 	else if (NewCommand == "RADAR_ACTIVATE")
 	{
-		return EEltSimulatorCommands::RADAR_ACTIVATE;
+		return EEltSimulatorCommandsCemaNo::RADAR_ACTIVATE;
 	}
 	else
 	{
-		return EEltSimulatorCommands::INVALID_COMMAND;
+		return EEltSimulatorCommandsCemaNo::INVALID_COMMAND;
 	}
 }
 
-FString ACPP_EltSimulatorCommunicator::EnumToDisplayNameString(EEltSimulatorCommands EnumValue)
+EEltSimulatorCommandsCemaYes ACPP_EltSimulatorCommunicator::StringToEltSimulatorCommandCemaYes(FString NewCommand)
 {
-	const UEnum* Enum = StaticEnum<EEltSimulatorCommands>();
+	if (NewCommand == "INITIAL_SEQUENCE")
+	{
+		return EEltSimulatorCommandsCemaYes::INITIAL_SEQUENCE;
+	}
+	else if (NewCommand == "START_SIMULATION")
+	{
+		return EEltSimulatorCommandsCemaYes::START_SIMULATION;
+	}
+	else if (NewCommand == "DRONE_ACTIVATE")
+	{
+		return EEltSimulatorCommandsCemaYes::DRONE_ACTIVATE;
+	}
+	else if (NewCommand == "UNAUTHORIZED_COMMUNICATIONS")
+	{
+		return EEltSimulatorCommandsCemaYes::UNAUTHORIZED_COMMUNICATIONS;
+	}
+	else if (NewCommand == "DRONE_DEACTIVATE")
+	{
+		return EEltSimulatorCommandsCemaYes::DRONE_DEACTIVATE;
+	}
+	else if (NewCommand == "NETWORK_SWITCH")
+	{
+		return EEltSimulatorCommandsCemaYes::NETWORK_SWITCH;
+	}
+	else if (NewCommand == "SUBMARINE_ACTIVATE")
+	{
+		return EEltSimulatorCommandsCemaYes::SUBMARINE_ACTIVATE;
+	}
+	else if (NewCommand == "CYBER_SOP")
+	{
+		return EEltSimulatorCommandsCemaYes::CYBER_SOP;
+	}
+	else if (NewCommand == "RADAR_ACTIVATE")
+	{
+		return EEltSimulatorCommandsCemaYes::RADAR_ACTIVATE;
+	}
+	else
+	{
+		return EEltSimulatorCommandsCemaYes::INVALID_COMMAND;
+	}
+}
+
+template<typename EnumType>
+FString ACPP_EltSimulatorCommunicator::EnumToDisplayNameString(EnumType EnumValue)
+{
+	const UEnum* Enum = StaticEnum<EnumType>();
 
 	if (!Enum) return FString("Invalid");
 
 	return Enum->GetDisplayNameTextByValue(static_cast<int64>(EnumValue)).ToString();
 }
 
-EEltSimulatorCommands ACPP_EltSimulatorCommunicator::ParseCommand(FString NewCommand)
+void ACPP_EltSimulatorCommunicator::ParseCommand(FString NewCommand)
 {
 	NewCommand.ReplaceInline(TEXT("{"), TEXT(""));
 	NewCommand.ReplaceInline(TEXT("}"), TEXT(""));
@@ -99,16 +162,28 @@ EEltSimulatorCommands ACPP_EltSimulatorCommunicator::ParseCommand(FString NewCom
 
 	NewCommand.ParseIntoArray(StringArray, TEXT(":"), true);
 
-	if (StringArray.IsValidIndex(1))
+	if (EltSimulatorScenario == EEltSimulatorScenarios::CEMA_NO)
 	{
-		EltSimulatorCommand = StringToEltSimulatorCommand(StringArray[1]);
+		if (StringArray.IsValidIndex(1))
+		{
+			EltSimulatorCommandCemaNo = StringToEltSimulatorCommandCemaNo(StringArray[1]);
+		}
+		else
+		{
+			EltSimulatorCommandCemaNo = EEltSimulatorCommandsCemaNo::INVALID_COMMAND;
+		}
 	}
-	else
+	else if (EltSimulatorScenario == EEltSimulatorScenarios::CEMA_YES)
 	{
-		EltSimulatorCommand = EEltSimulatorCommands::INVALID_COMMAND;
+		if (StringArray.IsValidIndex(1))
+		{
+			EltSimulatorCommandCemaYes = StringToEltSimulatorCommandCemaYes(StringArray[1]);
+		}
+		else
+		{
+			EltSimulatorCommandCemaYes = EEltSimulatorCommandsCemaYes::INVALID_COMMAND;
+		}
 	}
-
-	return EltSimulatorCommand;
 }
 
 //void ACPP_EltSimulatorCommunicator::StartNewServer()
@@ -126,7 +201,10 @@ void ACPP_EltSimulatorCommunicator::ServerOnListening(UWebSocketServer* NewSocke
 
 	FString Output = WebSocketServer->GetFName().ToString() + " is listening!";
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
+	if (IsDebugMode)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
+	}
 }
 
 void ACPP_EltSimulatorCommunicator::ServerOnNewClient(UWebSocket* NewClient)
@@ -137,25 +215,49 @@ void ACPP_EltSimulatorCommunicator::ServerOnNewClient(UWebSocket* NewClient)
 
 	FString Output = "[" + NewClient->GetFName().ToString() + "] joined!";
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
+	if (IsDebugMode)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
+	}
 }
 
 void ACPP_EltSimulatorCommunicator::ServerOnMessage(FString NewCommand, UWebSocket* NewClient, int& SequenceIndex)
 {
 	if (NewClient == nullptr)
 	{
-		SequenceIndex = static_cast<int>(EEltSimulatorCommands::INVALID_COMMAND);
+		if (EltSimulatorScenario == EEltSimulatorScenarios::CEMA_NO)
+		{
+			SequenceIndex = static_cast<int>(EEltSimulatorCommandsCemaNo::INVALID_COMMAND);
+		}
+		else if (EltSimulatorScenario == EEltSimulatorScenarios::CEMA_YES)
+		{
+			SequenceIndex = static_cast<int>(EEltSimulatorCommandsCemaYes::INVALID_COMMAND);
+		}
 
 		return;
 	}
 
 	ParseCommand(NewCommand);
 
-	SequenceIndex = static_cast<int>(EltSimulatorCommand);
+	FString Output = "";
 
-	FString Output = "[" + NewClient->GetFName().ToString() + "] " + EnumToDisplayNameString(EltSimulatorCommand) + "\n[Sequence index] " + FString::FromInt(SequenceIndex);
+	if (EltSimulatorScenario == EEltSimulatorScenarios::CEMA_NO)
+	{
+		SequenceIndex = static_cast<int>(EltSimulatorCommandCemaNo);
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
+		Output = "[" + NewClient->GetFName().ToString() + "] " + EnumToDisplayNameString(EltSimulatorCommandCemaNo) + "\n[Sequence index] " + FString::FromInt(SequenceIndex);
+	}
+	else if (EltSimulatorScenario == EEltSimulatorScenarios::CEMA_YES)
+	{
+		SequenceIndex = static_cast<int>(EltSimulatorCommandCemaYes);
+
+		Output = "[" + NewClient->GetFName().ToString() + "] " + EnumToDisplayNameString(EltSimulatorCommandCemaYes) + "\n[Sequence index] " + FString::FromInt(SequenceIndex);
+	}
+
+	if (IsDebugMode)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
+	}
 }
 
 void ACPP_EltSimulatorCommunicator::ServerOnClientLeft(UWebSocket* NewClient)
@@ -164,7 +266,10 @@ void ACPP_EltSimulatorCommunicator::ServerOnClientLeft(UWebSocket* NewClient)
 
 	FString Output = "[" + NewClient->GetFName().ToString() + "] left!";
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
+	if (IsDebugMode)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, Output);
+	}
 
 	ClientsCount--;
 }
