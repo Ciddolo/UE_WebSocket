@@ -68,10 +68,6 @@ EEltSimulatorCommandsCemaNo ACPP_EltSimulatorCommunicator::StringToEltSimulatorC
 	{
 		return EEltSimulatorCommandsCemaNo::DRONE_ACTIVATE;
 	}
-	else if (NewCommand == "UNAUTHORIZED_COMMUNICATIONS")
-	{
-		return EEltSimulatorCommandsCemaNo::UNAUTHORIZED_COMMUNICATIONS;
-	}
 	else if (NewCommand == "DRONE_DEACTIVATE")
 	{
 		return EEltSimulatorCommandsCemaNo::DRONE_DEACTIVATE;
